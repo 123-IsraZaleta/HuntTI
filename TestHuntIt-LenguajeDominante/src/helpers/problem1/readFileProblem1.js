@@ -7,9 +7,7 @@ import { replaceElement } from './replaceElement';
 import { isInRange } from './isInRange';
 
 export const readFileProblem1 = ( file ) => {
-
     try {
-
         const fileReader = new FileReader();
         fileReader.readAsText( file );
         fileReader.onload = ( { target } ) => { //Se ejecuta onload cuando todo esta ok
@@ -28,13 +26,22 @@ export const readFileProblem1 = ( file ) => {
             if( typeof( goAhead ) === 'object' ){
                 return;
             }
-
-            const instruction1 = replaceElement( words[1], numbersArrayCleaner[0] );
-            const instruction2 = replaceElement( words[2], numbersArrayCleaner[1] );
+            const dirtyInstruction1 = replaceElement( words[1]);
+            const dirtyInstruction2 = replaceElement( words[2]);
+            const instruction1 = cleanWord(dirtyInstruction1, numbersArrayCleaner[0])
+            const instruction2 = cleanWord(dirtyInstruction2, numbersArrayCleaner[1])
+            if( !instruction1 || !instruction2 ){
+                return Swal.fire('Error', `The instruction is invalid`, 'error')
+            }
             const message = cleanWord( words[3], numbersArrayCleaner[2]);
+            if(!message){
+                return Swal.fire('Error', `The message is invalid`, 'error')
+            }
             const res1 = isMessage( instruction1, message );  
-            const res2 = isMessage( instruction2, message );  
-
+            const res2 = isMessage( instruction2, message );
+            if( res1 === 'Si' && res2 === 'Si' ){
+                return Swal.fire('Error', `Only 1 instruction can contain the message`, 'error')
+            }
             const blob = new Blob([ res1,'\n',res2 ], { type: 'text/plain;charset=utf-8' });
             saveAs( blob, 'decrypted.txt' );
             window.location.reload();     
@@ -43,7 +50,6 @@ export const readFileProblem1 = ( file ) => {
             return Swal.fire('Error', fileReader.error, 'error');
 
         }
-        
     } catch (error) {
         return Swal.fire('Error', `${ error }`, 'error');
     }

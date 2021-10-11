@@ -1,14 +1,14 @@
 import React from 'react';
 
-import { readFileProblem1 } from './helpers/readFileProblem1';
-import { readFileProblem2 } from './helpers/readFileProblem2';
+import { readFileProblem1 } from './helpers/problem1/readFileProblem1';
+import { readFileProblem2 } from './helpers/problem2/readFileProblem2';
 
 import './assets/css/main.css';
 
 export const HuntItTest = () => {
 
     const handleFileProblem1 = ({ target }) => {
-
+        
         const file = ( target.files[0] );
         if( file ){
             
@@ -18,15 +18,15 @@ export const HuntItTest = () => {
     }
 
     const handleFileProblem2 = ({ target }) => {
-
+        
         const file = ( target.files[0] );
         if( file ){
-            
+
             readFileProblem2( file );
         }
         return;
     }
-    
+
     return (
         <div className = "main d-flex justify-content-center " >
             
@@ -50,7 +50,6 @@ export const HuntItTest = () => {
                     accept = ".txt"
                 />
             </div>
-            
         </div>
     )
 }

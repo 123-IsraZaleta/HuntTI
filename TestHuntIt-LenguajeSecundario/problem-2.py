@@ -1,27 +1,58 @@
-
-max_1 = 0
-max_2 = 0
-
-rounds = int(input("\nNumber of rounds:\n"))
-if ( rounds in range(1, 10001, 1) ): #Para evaluar si esta en rango
-    for i in range( rounds ):
-        number = input("\nWrite score of both players:\n");
-        resultInt = [int(x) for x in number.split()] #Se cambia valor a int para evaluar
-        
-        if( resultInt[0] > resultInt[1] ):
-            advantage_1 = resultInt[0] - resultInt[1]
-            if( advantage_1 >= max_1 ):
-                max_1 = advantage_1 #Se mantiene la referencia a la mayor ventaja
+def main():
+    j=0
+    k=0
+    lineList = []
+    max_1 = 0
+    max_2 = 0
+    player1_score = 0
+    player2_score = 0
+    file = './data/dataProblem2.txt' #-------------------PLEASE TYPE THE DOCUMENT PATH--------------------------------
+    with open(file, 'r+') as file_obj:
+        for lines in file_obj:
+            lineDirty = lines.rstrip()
+            lineClear = lineDirty.split()
+            lineList.append(lineClear)
+        rounds = int(lineList[0][0])
+        if len(lineList[0]) != 1 or len(lineList)-1 != rounds or rounds not in range(1, 10001, 1):
+            return print('Please type a valid number rounds')
+        for i in range(1, len(lineList)):
+            k = k + 1
+            if( len(lineList[i]) != 2 ):
+                return print('Please type only 2 scores each line')
+            if( int(lineList[k][j]) == int(lineList[k][j+1])):
+                return print('Please dont type same scores')
+        for i in range( len(lineList)-1 ):
+            score1 = int(lineList[i+1][j])
+            score2 = int(lineList[i+1][j+1])
+            if( i == 0 ):
+                if( score1 > score2 ):
+                    result1 = score1 - score2
+                    if( max_1 < result1 ):
+                        max_1 = result1
+                else:
+                    result2 = score2 - score1
+                    if( max_2 < result2 ):
+                        max_2 = result2
+                player1_score = score1
+                player2_score = score2
+            if( i > 0 ):
+                player1_score = player1_score + score1
+                player2_score = player2_score + score2
+                if( player1_score > player2_score ):
+                    result1 = player1_score - player2_score
+                    if( max_1 < result1 ):
+                        max_1 = result1
+                else:
+                    result2 = player2_score - player1_score
+                    if( max_2 < result2 ):
+                        max_2 = result2
+        archivo = open('Score.txt', 'w')
+        if( max_1 > max_2):
+            archivo.write('1 ' + str(max_1))
         else:
-            advantage_2 = resultInt[1] - resultInt[0]
-            if( advantage_2 >= max_2 ):
-                max_2 = advantage_2 #Se mantiene la referencia a la mayor ventaja
+            archivo.write('2 ' + str(max_2))
+        archivo.close()
+        if( max_1 == max_2 ): #Fix this evaluation
+            return print('No hay empates, se puede asumir siempre existe un ganador único')
 
-    if( max_1 > max_2): #Se compara cual ventaja fue mayor para dar al ganador
-        print('1', max_1 )
-    else:
-        print('2', max_2 )
-    if( max_1 == max_2 ): #EN CASO DE EMPATE se juega nuevamente
-        print('Please, play again')
-else:
-    print('Please type a number inside range')
+main()
